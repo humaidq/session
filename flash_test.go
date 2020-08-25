@@ -19,13 +19,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/go-emmanuel/emmanuel"
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/macaron.v1"
 )
 
 func Test_Flash(t *testing.T) {
 	Convey("Test flash", t, func() {
-		m := macaron.New()
+		m := emmanuel.New()
 		m.Use(Sessioner())
 		m.Get("/set", func(f *Flash) string {
 			f.Success("success")

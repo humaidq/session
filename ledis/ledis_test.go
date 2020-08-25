@@ -19,10 +19,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/go-emmanuel/emmanuel"
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/macaron.v1"
 
-	"github.com/go-macaron/session"
+	"github.com/go-emmanuel/session"
 )
 
 func Test_LedisProvider(t *testing.T) {
@@ -33,13 +33,13 @@ func Test_LedisProvider(t *testing.T) {
 		}
 
 		Convey("Basic operation", func() {
-			m := macaron.New()
+			m := emmanuel.New()
 			m.Use(session.Sessioner(opt))
 
-			m.Get("/", func(ctx *macaron.Context, sess session.Store) {
+			m.Get("/", func(ctx *emmanuel.Context, sess session.Store) {
 				So(sess.Set("uname", "unknwon"), ShouldBeNil)
 			})
-			m.Get("/reg", func(ctx *macaron.Context, sess session.Store) {
+			m.Get("/reg", func(ctx *emmanuel.Context, sess session.Store) {
 				raw, err := sess.RegenerateId(ctx)
 				So(err, ShouldBeNil)
 				So(raw, ShouldNotBeNil)
@@ -48,7 +48,7 @@ func Test_LedisProvider(t *testing.T) {
 				So(uname, ShouldNotBeNil)
 				So(uname, ShouldEqual, "unknwon")
 			})
-			m.Get("/get", func(ctx *macaron.Context, sess session.Store) {
+			m.Get("/get", func(ctx *emmanuel.Context, sess session.Store) {
 				sid := sess.ID()
 				So(sid, ShouldNotBeEmpty)
 
@@ -88,7 +88,7 @@ func Test_LedisProvider(t *testing.T) {
 			m.ServeHTTP(resp, req)
 
 			Convey("Regenrate empty session", func() {
-				m.Get("/empty", func(ctx *macaron.Context, sess session.Store) {
+				m.Get("/empty", func(ctx *emmanuel.Context, sess session.Store) {
 					raw, err := sess.RegenerateId(ctx)
 					So(err, ShouldBeNil)
 					So(raw, ShouldNotBeNil)

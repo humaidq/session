@@ -13,7 +13,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-// Package session a middleware that provides the session management of Macaron.
+// Package session a middleware that provides the session management of Emmanuel.
 package session
 
 import (
@@ -24,7 +24,7 @@ import (
 	"net/url"
 	"time"
 
-	"gopkg.in/macaron.v1"
+	"github.com/go-emmanuel/emmanuel"
 )
 
 const _VERSION = "0.6.0"
@@ -55,9 +55,9 @@ type Store interface {
 	// Read returns raw session store by session ID.
 	Read(string) (RawStore, error)
 	// Destory deletes a session.
-	Destory(*macaron.Context) error
+	Destory(*emmanuel.Context) error
 	// RegenerateId regenerates a session store from old session ID to new one.
-	RegenerateId(*macaron.Context) (RawStore, error)
+	RegenerateId(*emmanuel.Context) (RawStore, error)
 	// Count counts and returns number of sessions.
 	Count() int
 	// GC calls GC to clean expired sessions.
@@ -107,7 +107,7 @@ func prepareOptions(options []Options) Options {
 	if len(opt.Section) == 0 {
 		opt.Section = "session"
 	}
-	sec := macaron.Config().Section(opt.Section)
+	sec := emmanuel.Config().Section(opt.Section)
 
 	if len(opt.Provider) == 0 {
 		opt.Provider = sec.Key("PROVIDER").MustString("memory")
@@ -148,7 +148,7 @@ func prepareOptions(options []Options) Options {
 
 // Sessioner is a middleware that maps a session.SessionStore service into the Macaron handler chain.
 // An single variadic session.Options struct can be optionally provided to configure.
-func Sessioner(options ...Options) macaron.Handler {
+func Sessioner(options ...Options) emmanuel.Handler {
 	opt := prepareOptions(options)
 	manager, err := NewManager(opt.Provider, opt)
 	if err != nil {
@@ -156,7 +156,7 @@ func Sessioner(options ...Options) macaron.Handler {
 	}
 	go manager.startGC()
 
-	return func(ctx *macaron.Context) {
+	return func(ctx *emmanuel.Context) {
 		sess, err := manager.Start(ctx)
 		if err != nil {
 			panic("session(start): " + err.Error())
@@ -175,7 +175,7 @@ func Sessioner(options ...Options) macaron.Handler {
 		}
 
 		f := &Flash{ctx, url.Values{}, "", "", "", ""}
-		ctx.Resp.Before(func(macaron.ResponseWriter) {
+		ctx.Resp.Before(func(emmanuel.ResponseWriter) {
 			if flash := f.Encode(); len(flash) > 0 {
 				ctx.SetCookie("macaron_flash", flash, 0, opt.CookiePath)
 			}
@@ -279,7 +279,7 @@ func (m *Manager) validSessionID(sid string) (bool, error) {
 
 // Start starts a session by generating new one
 // or retrieve existence one by reading session ID from HTTP request if it's valid.
-func (m *Manager) Start(ctx *macaron.Context) (RawStore, error) {
+func (m *Manager) Start(ctx *emmanuel.Context) (RawStore, error) {
 	sid := ctx.GetCookie(m.opt.CookieName)
 	valid, _ := m.validSessionID(sid)
 	if len(sid) > 0 && valid && m.provider.Exist(sid) {
@@ -319,7 +319,7 @@ func (m *Manager) Read(sid string) (RawStore, error) {
 }
 
 // Destory deletes a session by given ID.
-func (m *Manager) Destory(ctx *macaron.Context) error {
+func (m *Manager) Destory(ctx *emmanuel.Context) error {
 	sid := ctx.GetCookie(m.opt.CookieName)
 	if len(sid) == 0 {
 		return nil
@@ -344,7 +344,7 @@ func (m *Manager) Destory(ctx *macaron.Context) error {
 }
 
 // RegenerateId regenerates a session store from old session ID to new one.
-func (m *Manager) RegenerateId(ctx *macaron.Context) (sess RawStore, err error) {
+func (m *Manager) RegenerateId(ctx *emmanuel.Context) (sess RawStore, err error) {
 	sid := m.sessionID()
 	oldsid := ctx.GetCookie(m.opt.CookieName)
 	_, err = m.validSessionID(oldsid)

@@ -1,4 +1,5 @@
 // Copyright 2018 The Macaron Authors
+// Copyright 2020 the Emmanuel developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License"): you may
 // not use this file except in compliance with the License. You may obtain
@@ -17,18 +18,18 @@ package session
 import (
 	"net/url"
 
-	"gopkg.in/macaron.v1"
+	"github.com/go-emmanuel/emmanuel"
 )
 
 type Flash struct {
-	ctx *macaron.Context
+	ctx *emmanuel.Context
 	url.Values
 	ErrorMsg, WarningMsg, InfoMsg, SuccessMsg string
 }
 
 func (f *Flash) set(name, msg string, current ...bool) {
 	isShow := false
-	if (len(current) == 0 && macaron.FlashNow) ||
+	if (len(current) == 0 && emmanuel.FlashNow) ||
 		(len(current) > 0 && current[0]) {
 		isShow = true
 	}

@@ -24,7 +24,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/go-macaron/session"
+	"github.com/go-emmanuel/session"
 )
 
 // MysqlStore represents a mysql session store implementation.

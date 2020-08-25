@@ -21,8 +21,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-emmanuel/emmanuel"
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/macaron.v1"
 )
 
 func Test_Version(t *testing.T) {
@@ -33,7 +33,7 @@ func Test_Version(t *testing.T) {
 
 func Test_Sessioner(t *testing.T) {
 	Convey("Use session middleware", t, func() {
-		m := macaron.New()
+		m := emmanuel.New()
 		m.Use(Sessioner())
 		m.Get("/", func() {})
 
@@ -49,7 +49,7 @@ func Test_Sessioner(t *testing.T) {
 				So(recover(), ShouldNotBeNil)
 			}()
 
-			m := macaron.New()
+			m := emmanuel.New()
 			m.Use(Sessioner(Options{
 				Provider: "fake",
 			}))
@@ -75,13 +75,13 @@ func Test_Sessioner(t *testing.T) {
 
 func testProvider(opt Options) {
 	Convey("Basic operation", func() {
-		m := macaron.New()
+		m := emmanuel.New()
 		m.Use(Sessioner(opt))
 
-		m.Get("/", func(ctx *macaron.Context, sess Store) {
+		m.Get("/", func(ctx *emmanuel.Context, sess Store) {
 			So(sess.Set("uname", "unknwon"), ShouldBeNil)
 		})
-		m.Get("/reg", func(ctx *macaron.Context, sess Store) {
+		m.Get("/reg", func(ctx *emmanuel.Context, sess Store) {
 			raw, err := sess.RegenerateId(ctx)
 			So(err, ShouldBeNil)
 			So(raw, ShouldNotBeNil)
@@ -90,7 +90,7 @@ func testProvider(opt Options) {
 			So(uname, ShouldNotBeNil)
 			So(uname, ShouldEqual, "unknwon")
 		})
-		m.Get("/get", func(ctx *macaron.Context, sess Store) {
+		m.Get("/get", func(ctx *emmanuel.Context, sess Store) {
 			sid := sess.ID()
 			So(sid, ShouldNotBeEmpty)
 
@@ -131,9 +131,9 @@ func testProvider(opt Options) {
 	})
 
 	Convey("Regenrate empty session", func() {
-		m := macaron.New()
+		m := emmanuel.New()
 		m.Use(Sessioner(opt))
-		m.Get("/", func(ctx *macaron.Context, sess Store) {
+		m.Get("/", func(ctx *emmanuel.Context, sess Store) {
 			raw, err := sess.RegenerateId(ctx)
 			So(err, ShouldBeNil)
 			So(raw, ShouldNotBeNil)
@@ -147,7 +147,7 @@ func testProvider(opt Options) {
 	})
 
 	Convey("GC session", func() {
-		m := macaron.New()
+		m := emmanuel.New()
 		opt2 := opt
 		opt2.Gclifetime = 1
 		m.Use(Sessioner(opt2))
@@ -174,9 +174,9 @@ func testProvider(opt Options) {
 	})
 
 	Convey("Detect invalid sid", func() {
-		m := macaron.New()
+		m := emmanuel.New()
 		m.Use(Sessioner(opt))
-		m.Get("/", func(ctx *macaron.Context, sess Store) {
+		m.Get("/", func(ctx *emmanuel.Context, sess Store) {
 			raw, err := sess.Read("../session/ad2c7e3cbecfcf486")
 			So(strings.Contains(err.Error(), "invalid 'sid': "), ShouldBeTrue)
 			So(raw, ShouldBeNil)
