@@ -23,7 +23,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/go-emmanuel/emmanuel"
-	"github.com/go-emmanuel/session"
+	"github.com/humaidq/session"
 )
 
 func Test_PostgresProvider(t *testing.T) {

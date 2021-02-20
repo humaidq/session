@@ -25,7 +25,7 @@ import (
 	"gopkg.in/ini.v1"
 	"gopkg.in/redis.v2"
 
-	"github.com/go-emmanuel/session"
+	"github.com/humaidq/session"
 )
 
 // RedisStore represents a redis session store implementation.

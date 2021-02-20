@@ -23,7 +23,7 @@ import (
 	"github.com/go-emmanuel/emmanuel"
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/go-emmanuel/session"
+	"github.com/humaidq/session"
 )
 
 func Test_MysqlProvider(t *testing.T) {

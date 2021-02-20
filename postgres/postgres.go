@@ -24,7 +24,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/go-emmanuel/session"
+	"github.com/humaidq/session"
 )
 
 // PostgresStore represents a postgres session store implementation.

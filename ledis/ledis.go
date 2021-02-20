@@ -25,7 +25,7 @@ import (
 	"github.com/unknwon/com"
 	"gopkg.in/ini.v1"
 
-	"github.com/go-emmanuel/session"
+	"github.com/humaidq/session"
 )
 
 // LedisStore represents a ledis session store implementation.
