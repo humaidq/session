@@ -296,7 +296,7 @@ func (m *Manager) Start(ctx *emmanuel.Context) (RawStore, error) {
 		Name:     m.opt.CookieName,
 		Value:    sid,
 		Path:     m.opt.CookiePath,
-		HttpOnly: true,
+		HttpOnly: false,
 		Secure:   m.opt.Secure,
 		Domain:   m.opt.Domain,
 	}
@@ -335,7 +335,7 @@ func (m *Manager) Destory(ctx *emmanuel.Context) error {
 	cookie := &http.Cookie{
 		Name:     m.opt.CookieName,
 		Path:     m.opt.CookiePath,
-		HttpOnly: true,
+		HttpOnly: false,
 		Expires:  time.Now(),
 		MaxAge:   -1,
 	}
@@ -359,7 +359,7 @@ func (m *Manager) RegenerateId(ctx *emmanuel.Context) (sess RawStore, err error)
 		Name:     m.opt.CookieName,
 		Value:    sid,
 		Path:     m.opt.CookiePath,
-		HttpOnly: true,
+		HttpOnly: false,
 		Secure:   m.opt.Secure,
 		Domain:   m.opt.Domain,
 	}

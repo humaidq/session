@@ -1,4 +1,4 @@
-module github.com/go-emmanuel/session
+module github.com/humaidq/session
 
 go 1.12
 
